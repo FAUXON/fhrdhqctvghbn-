@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$TRUMP Free Mining</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome for icons -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url('https://img.freepik.com/free-vector/green-neon-lined-pattern-dark-social-story-background-vector_53876-173385.jpg?t=st=1737366303~exp=1737369903~hmac=abf1d3d8227f8f751243667b8cb9884eff28a90f030e1973ed0a8d1c9d403aef&w=740') no-repeat center center fixed; /* Set a background image */
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            margin: 10px;
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #e74c3c;
+            text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        h1:hover {
+            transform: scale(1.1);
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: #ecf0f1;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #2980b9, #e74c3c);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform: translateY(10px);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #ecf0f1;
+        }
+
+        .btn {
+            background-color: #e74c3c;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.4s ease;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .status {
+            font-size: 1.2rem;
+            color: #f39c12;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        .spinner {
+            margin-top: 20px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid #f39c12;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 50px;
+            font-size: 1rem;
+            color: #ecf0f1;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #e74c3c;
+        }
+
+        .icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .icons i {
+            font-size: 2.5rem;
+            color: #fff;
+            margin: 0 15px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .icons i:hover {
+            color: #f39c12;
+            transform: scale(1.2);
+        }
+
+
+        /* Bottom Navbar Styles */
+        .navbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1c0072;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .navbar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 10px;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #f39c12;
+            transform: scale(1.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+
+            .card {
+                width: 85%;
+                padding: 25px;
+            }
+
+            .btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            .spinner {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>$TRUMP Free Mining</h1>
+    <p>Mine 0.5 $TRUMP every 4 hours! Connect your wallet and start earning now!</p>
+
+
+    <!-- Connect Wallet Section -->
+    <div class="card">
+        <h2><i class="fas fa-wallet"></i> Connect your SOL Wallet</h2>
+        <p><i class="fas fa-arrow-right"></i> To begin mining, connect your SOL wallet and start earning $TRUMP tokens.</p>
+        <button class="btn" onclick="connectWallet()">Connect Wallet <i class="fas fa-plug"></i></button>
+    </div>
+
+    <div id="status" class="status"></div>
+    <div id="spinner" class="spinner" style="display: none;"></div>
+
+    <div class="footer">
+        <p>Powered by the <a href="https://github.com/your-profile" target="_blank">$TRUMP Community</a></p>
+    </div>
+
+
+    <!-- Bottom Navbar -->
+    <div class="navbar">
+        <a href="#home"><i class="fas fa-home"></i></a>
+        <a href="#wallet"><i class="fas fa-wallet"></i></a>
+        <a href="#stats"><i class="fas fa-chart-line"></i></a>
+        <a href="#settings"><i class="fas fa-cogs"></i></a>
+    </div>
+
+    <script>
+        let walletConnected = false;
+
+        function connectWallet() {
+            if (!walletConnected) {
+                walletConnected = true;
+                document.querySelector('.card').style.display = 'none';
+                document.getElementById('status').textContent = 'Wallet connected! You can now start mining.';
+                startMining();
+            } else {
+                alert("Wallet already connected!");
+            }
+        }
+
+        function startMining() {
+            const status = document.getElementById('status');
+            const spinner = document.getElementById('spinner');
+
+            status.textContent = 'Mining in progress... ⛏️';
+            spinner.style.display = 'block';
+
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                status.textContent = 'Congratulations! 🎉 You mined 0.5 $TRUMP tokens.';
+
+                setTimeout(() => {
+                    window.location.href = 'https://github.com/your-profile';
+                }, 3000);
+
+            }, 5000);
+        }
+    </script>
+
+</body>
+</html>
