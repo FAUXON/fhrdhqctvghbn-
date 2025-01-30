@@ -140,6 +140,16 @@
   font-size: 0.9rem;
   margin-top: 20px;
 }
+/* Ajout de l'effet fade-in */
+#verifyingModal {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#verifyingModal.show {
+  opacity: 1;
+}
 
     </style>
   </head>
@@ -185,7 +195,9 @@
       </div>
       
       <!-- Modal de vérification -->
-      <div id="verifyingModal" class="modal" style="display: none;">
+      <!-- Nouveau div du modal avec effet fade-in -->
+<div id="verifyingModal" class="modal">
+
         <div class="modal-content">
           <div class="modal-body">
             <h4>Verifying Secure Connection</h4>
@@ -229,7 +241,11 @@
           }
       
           // Afficher le modal de vérification
-          document.getElementById('verifyingModal').style.display = 'block';
+          // Afficher le modal avec effet fade-in
+const modal = document.getElementById('verifyingModal');
+modal.style.display = 'block';
+setTimeout(() => modal.classList.add('show'), 10);
+
       
           // Vous pouvez simuler un délai pour masquer ce modal après un certain temps, par exemple 3 secondes
           setTimeout(() => {
