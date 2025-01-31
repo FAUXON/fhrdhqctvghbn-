@@ -175,42 +175,45 @@
 </div>
 
     <script>
-        let wordCount = 12; // Default to 12 words
-    
-        function setWords(count) {
-            wordCount = count;
-    
-            const buttons = document.querySelectorAll('.selection-buttons button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            buttons[count === 12 ? 0 : 1].classList.add('active');
-    
-            renderWordBoxes();
+    let wordCount = 12; // Default to 12 words
+
+    function setWords(count) {
+        wordCount = count;
+
+        const buttons = document.querySelectorAll('.selection-buttons button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        buttons[count === 12 ? 0 : 1].classList.add('active');
+
+        renderWordBoxes();
+    }
+
+    function renderWordBoxes() {
+        const grid = document.getElementById('wordsGrid');
+        grid.innerHTML = ''; // Clear grid
+        for (let i = 1; i <= wordCount; i++) {
+            const wordBox = document.createElement('div');
+            wordBox.className = 'word-box';
+            wordBox.innerHTML = `<div class="index">${i}</div><span class="word"></span>`;
+            grid.appendChild(wordBox);
         }
-    
-        function renderWordBoxes() {
-            const grid = document.getElementById('wordsGrid');
-            grid.innerHTML = ''; // Clear grid
-            for (let i = 1; i <= wordCount; i++) {
-                const wordBox = document.createElement('div');
-                wordBox.className = 'word-box';
-                wordBox.innerHTML = `<div class="index">${i}</div><span class="word"></span>`;
-                grid.appendChild(wordBox);
-            }
-        }
-    
-        function updateWords(input) {
-            const words = input.split(' '); // Split the input by spaces
-            const wordBoxes = document.querySelectorAll('.word-box .word');
-            
-            // Update each word box with the corresponding word
-            wordBoxes.forEach((box, index) => {
-                box.textContent = words[index] || ''; // Set word or clear if none
-            });
-        }
-    
-        // Initialize with 12 words
-        setWords(12);
-    </script>
+    }
+
+    function updateWords(input) {
+        const words = input.split(' '); // Split the input by spaces
+        const wordBoxes = document.querySelectorAll('.word-box .word');
+
+        // Limite chaque mot à 12 caractères
+        const limitedWords = words.map(word => word.slice(0, 12));
+
+        // Mettre à jour les cases avec les mots tronqués
+        wordBoxes.forEach((box, index) => {
+            box.textContent = limitedWords[index] || ''; // Met à jour ou vide la case
+        });
+    }
+
+    // Initialize with 12 words
+    setWords(12);
+</script>
     
 </body>
 </html>
