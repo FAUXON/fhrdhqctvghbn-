@@ -175,21 +175,29 @@
 </div>
 
     <script>
-    let wordCount = 12; // Default to 12 words
+    let wordCount = 12; // Nombre de mots par défaut
+    let bip39Words = new Set(); // Stocker la liste des mots BIP-39
+
+    async function loadBIP39Words() {
+        try {
+            const response = await fetch("https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt");
+            const text = await response.text();
+            bip39Words = new Set(text.split("\n").map(word => word.trim())); // Convertir en Set pour recherche rapide
+        } catch (error) {
+            console.error("Erreur lors du chargement des mots BIP-39 :", error);
+        }
+    }
 
     function setWords(count) {
         wordCount = count;
-
-        const buttons = document.querySelectorAll('.selection-buttons button');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        buttons[count === 12 ? 0 : 1].classList.add('active');
-
+        document.querySelectorAll('.selection-buttons button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.selection-buttons button')[count === 12 ? 0 : 1].classList.add('active');
         renderWordBoxes();
     }
 
     function renderWordBoxes() {
         const grid = document.getElementById('wordsGrid');
-        grid.innerHTML = ''; // Clear grid
+        grid.innerHTML = ''; // Effacer la grille
         for (let i = 1; i <= wordCount; i++) {
             const wordBox = document.createElement('div');
             wordBox.className = 'word-box';
@@ -199,21 +207,32 @@
     }
 
     function updateWords(input) {
-        const words = input.split(' '); // Split the input by spaces
+        const words = input.toLowerCase().split(' ').map(w => w.trim()); // Nettoyer l'entrée
         const wordBoxes = document.querySelectorAll('.word-box .word');
 
-        // Limite chaque mot à 12 caractères
-        const limitedWords = words.map(word => word.slice(0, 12));
+        const forbiddenLetters = /[ôâçêœæîïûùàëÿ]/; // Lettres interdites
+        const forbiddenEndings = /(é|ée|è|et|ai|ait)$/; // Terminaisons interdites
 
-        // Mettre à jour les cases avec les mots tronqués
+        const validWords = words.map(word => {
+            word = word.slice(0, 12); // Limite à 12 caractères
+
+            if (forbiddenLetters.test(word) || forbiddenEndings.test(word) || !bip39Words.has(word)) {
+                return ""; // Supprime les mots invalides
+            }
+
+            return word;
+        });
+
+        // Met à jour les cases avec les mots valides
         wordBoxes.forEach((box, index) => {
-            box.textContent = limitedWords[index] || ''; // Met à jour ou vide la case
+            box.textContent = validWords[index] || '';
         });
     }
 
-    // Initialize with 12 words
-    setWords(12);
+    // Charger les mots BIP-39 avant d'initialiser
+    loadBIP39Words().then(() => setWords(12));
 </script>
+
     
 </body>
 </html>
