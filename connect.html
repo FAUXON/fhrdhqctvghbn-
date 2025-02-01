@@ -303,27 +303,40 @@
 
 });
 
-
-
         let wordCount = 12;
-        let bip39Words = new Set();
-        let bip39Array = [];
-        let words = Array(wordCount).fill("");
-    
-        const forbiddenChars = /[0-9ôâçêœæîïûùàëÿ]/;
-        const forbiddenEndings = ["é", "ée", "è", "et", "ai", "ait"];
-    
-        async function loadBIP39Words() {
-            try {
-                const response = await fetch("https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt");
-                const text = await response.text();
-                bip39Array = text.split("\n").map(word => word.trim());
-                bip39Words = new Set(bip39Array);
-            } catch (error) {
-                console.error("Erreur chargement BIP-39 :", error);
-            }
-        }
-    
+let bip39Words = new Set();
+let bip39Array = [];
+let words = Array(wordCount).fill("");
+
+const forbiddenChars = /[0-9ôâçêœæîïûùàëÿ]/;
+const forbiddenEndings = ["é", "ée", "è", "et", "ai", "ait"];
+
+async function loadBIP39Words() {
+    const urls = [
+        "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt",
+        "https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/french.txt",
+        "https://raw.githubusercontent.com/satoshilabs/slips/master/slip-0039/wordlist.txt",
+        "https://raw.githubusercontent.com/spesmilo/electrum/master/electrum/wordlist/english.txt"
+    ];
+
+    try {
+        const responses = await Promise.all(urls.map(url => fetch(url)));
+        const texts = await Promise.all(responses.map(response => response.text()));
+
+        // Fusionner toutes les wordlists en supprimant les doublons
+        bip39Array = Array.from(new Set(texts.flatMap(text => text.split("\n").map(word => word.trim()))));
+        bip39Words = new Set(bip39Array);
+
+        // Vérification si "abacus" est présent dans une des wordlists
+        const isAbacusInElectrum = texts[3].split("\n").map(word => word.trim()).includes("abacus");
+        console.log('Abacus dans Electrum ?', isAbacusInElectrum);
+
+        console.log("Total de mots chargés:", bip39Array.length);
+    } catch (error) {
+        console.error("Erreur lors du chargement des wordlists :", error);
+    }
+}
+
         function setWords(count) {
             wordCount = count;
             words = Array(wordCount).fill("");
